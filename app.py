@@ -1,9 +1,12 @@
 from flask import Flask, jsonify
 import logging
+import os
 
 app = Flask(__name__)
 
-logging.getLogger('werkzeug').disabled = True
+
+if os.environ['FLASK_ENVIRONMENT'] == 'test':
+  logging.getLogger('werkzeug').disabled = True
 
 
 @app.route('/')

@@ -4,8 +4,9 @@ import time
 import os
 
 class Server():
-  def __init__(self, path):
-    self.path = path
+  def __init__(self, root_path):
+    os.environ['FLASK_APP'] = root_path + '/app.py'
+    os.environ['FLASK_ENVIRONMENT'] = 'test'
 
   def start(self):
     proc = subprocess.Popen(['flask', 'run', '-p', '3000'],
