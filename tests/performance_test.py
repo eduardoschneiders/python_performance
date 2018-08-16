@@ -30,7 +30,6 @@ class RunningServer():
 
   def __enter__(self):
     self.server.start()
-    return False
 
   def __exit__(self, type, value, traceback):
     self.server.stop()
@@ -39,12 +38,11 @@ with RunningServer() as status:
   ct = CalculateTime()
 
   @ct.register_time
-  def request():
-    response = requests.get(HOST + '/')
-    print(response.status_code)
-    print(response.json())
+  def request(method, url):
+    eval('requests.' + method)(url)
 
-  request()
+  request('get', HOST + '/')
+  request('get', HOST + '/test')
 
   print(ct.get_results())
 
