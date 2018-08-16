@@ -6,7 +6,7 @@ import os
 class Server():
   def __init__(self, root_path):
     os.environ['FLASK_APP'] = root_path + '/app.py'
-    os.environ['FLASK_ENVIRONMENT'] = 'test'
+    os.environ['FLASK_ENV'] = 'test'
 
   def start(self):
     proc = subprocess.Popen(['flask', 'run', '-p', '3000'],

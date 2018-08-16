@@ -4,10 +4,8 @@ import os
 
 app = Flask(__name__)
 
-
-if os.environ['FLASK_ENVIRONMENT'] == 'test':
+if os.environ['FLASK_ENV'] == 'test':
   logging.getLogger('werkzeug').disabled = True
-
 
 @app.route('/')
 def root():
