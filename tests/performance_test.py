@@ -6,22 +6,45 @@ from server import Server
 HOST = 'http://localhost:3000'
 ROOT_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
-def expect(expected, current):
-  if expected != current:
-    raise StandardError
 
-server = Server(ROOT_PATH)
-server.start()
+class CalculateTime():
+  def __init__(self):
+    self.results = []
 
-response = requests.get(HOST + '/')
-print(response.status_code)
-print(response.json())
+  def register_time(self, function):
+    def wrapper(*args):
+      t = time.time()
+      result = function(*args)
+      total_time = round(time.time() - t, 3)
+      self.results.append(total_time)
+      return result
 
-t = time.time()
-response = requests.get(HOST + '/test')
-print(response.status_code)
-print(response.json())
+    return wrapper
 
-print(round(time.time() - t, 3))
+  def get_results(self):
+    return self.results
 
-server.stop()
+class RunningServer():
+  def __init__(self):
+    self.server = Server(ROOT_PATH)
+
+  def __enter__(self):
+    self.server.start()
+    return False
+
+  def __exit__(self, type, value, traceback):
+    self.server.stop()
+
+with RunningServer() as status:
+  ct = CalculateTime()
+
+  @ct.register_time
+  def request():
+    response = requests.get(HOST + '/')
+    print(response.status_code)
+    print(response.json())
+
+  request()
+
+  print(ct.get_results())
+
