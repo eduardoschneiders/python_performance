@@ -2,27 +2,10 @@ import time
 import requests
 import os
 from server import Server
+from calculate_time import CalculateTime
 
 HOST = 'http://localhost:3000'
 ROOT_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-
-
-class CalculateTime():
-  def __init__(self):
-    self.results = []
-
-  def register_time(self, function):
-    def wrapper(*args):
-      t = time.time()
-      result = function(*args)
-      total_time = round(time.time() - t, 3)
-      self.results.append(total_time)
-      return result
-
-    return wrapper
-
-  def get_results(self):
-    return self.results
 
 class RunningServer():
   def __init__(self):
@@ -34,7 +17,7 @@ class RunningServer():
   def __exit__(self, type, value, traceback):
     self.server.stop()
 
-with RunningServer() as status:
+with RunningServer():
   ct = CalculateTime()
 
   @ct.register_time
@@ -44,5 +27,5 @@ with RunningServer() as status:
   request('get', HOST + '/')
   request('get', HOST + '/test')
 
-  print(ct.get_results())
+  ct.print_results()
 
