@@ -4,7 +4,12 @@ import os
 
 app = Flask(__name__)
 
-if os.environ['FLASK_ENV'] == 'test':
+try:
+  environment = os.environ['FLASK_ENV']
+except KeyError:
+  environment = 'development'
+
+if environment == 'test':
   logging.getLogger('werkzeug').disabled = True
 
 @app.route('/')
