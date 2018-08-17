@@ -18,7 +18,7 @@ class RunningServer():
     self.server.stop()
 
 with RunningServer():
-  ct = CalculateTime()
+  ct = CalculateTime(max_time=2)
 
   @ct.register_time
   def request(method, url):
@@ -26,6 +26,8 @@ with RunningServer():
 
   request('get', HOST + '/')
   request('get', HOST + '/test')
+  request('get', HOST + '/slow/1')
+  request('get', HOST + '/superslow/2')
 
   ct.print_results()
-
+  ct.print_slowest_results()
