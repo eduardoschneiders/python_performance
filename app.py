@@ -1,7 +1,9 @@
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 import logging
 import os
 import time
+import json
+
 
 app = Flask(__name__)
 
@@ -25,3 +27,8 @@ def test():
 def random(name, number):
   time.sleep(int(number))
   return jsonify({'message': 'testing'})
+
+@app.route('/post/create/', methods=['POST'])
+def create_post():
+  print(request.json)
+  return jsonify({'a': 'a'})

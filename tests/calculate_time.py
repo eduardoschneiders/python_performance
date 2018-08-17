@@ -10,7 +10,9 @@ class CalculateTime():
       t = time.time()
       result = function(*args)
       total_time = round(time.time() - t, 3)
-      method, url = args
+      method = args[0]
+      url = args[1]
+
       self.results.append({'method': method, 'url': url, 'time': total_time})
       return result
 
@@ -30,7 +32,7 @@ class CalculateTime():
         self.print_result(result)
 
   def print_result(self, result):
-    print('%-15s%-4s%-40s' % (
+    print('%-15s%-5s%-40s' % (
         ' Time: ' + str(result['time']),
         result['method'].upper(),
         result['url']))
