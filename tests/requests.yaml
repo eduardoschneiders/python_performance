@@ -1,0 +1,15 @@
+endpoints:
+  - method: get
+    path: /
+
+  - method: get
+    path: /test
+
+  - method: get
+    path: /superslow/2
+
+  - method: post
+    path: /post/create
+    data:
+      username: 'eduardo'
+      password: 'eduardo'

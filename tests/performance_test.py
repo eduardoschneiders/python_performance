@@ -1,23 +1,24 @@
-import time
-import requests
-import os
-from server_manager import RunningServer
+import time, requests, os, yaml
+from test_suit import TestSuit
 from calculate_time import CalculateTime
 
 HOST = 'http://localhost:3000'
 ROOT_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
-with RunningServer(ROOT_PATH):
-  ct = CalculateTime(max_time=2)
+def load_requests():
+  with open(ROOT_PATH + '/tests/requests.yaml') as stream:
+    return yaml.load(stream)
 
+ct = CalculateTime(max_time=2)
+with TestSuit(ROOT_PATH, ct.print_results, ct.print_slowest_results):
   @ct.register_time
-  def request(method, url, data=None):
-    eval('requests.' + method)(url, data=data)
+  def make_request(method, url, data=None):
+    getattr(requests, method)(url, data=data)
 
-  request('get', HOST + '/')
-  request('get', HOST + '/test')
-  request('get', HOST + '/superslow/2')
-  request('post', HOST + '/post/create/', {'username': 'eduardo'})
+  for request in load_requests()['endpoints']:
+    try:
+      data = request['data']
+    except KeyError:
+      data = None
 
-  ct.print_results()
-  ct.print_slowest_results()
+    make_request(request['method'], HOST + request['path'], data)
