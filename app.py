@@ -32,3 +32,21 @@ def random(name, number):
 def create_post():
   print(request.json)
   return jsonify({'a': 'a'})
+
+def custom_func(data=None):
+  def custom_response(**args):
+    data.update({'a': 'a', 'name': 'asdf', 'n': args['name'] })
+    return json.dumps(data)
+
+  return custom_response
+
+routes = [
+  { 'path': '/index/<name>', 'function_name': 'index', 'data': { 'name': 'eduardo'}}
+]
+
+for route in routes:
+  app.add_url_rule(route['path'], route['function_name'])
+  app.view_functions[route['function_name']] = custom_func(route['data'])
+
+if __name__ == '__main__':
+  app.run(debug=True, host='0.0.0.0')

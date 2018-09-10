@@ -1,0 +1,8 @@
+docker build . -t performance:1
+docker run -p 80:80 -v $(pwd)/:/app performance:1
+
+
+docker image list
+docker container list
+docker ps -a
+docker container rm $(docker ps -a -q)
